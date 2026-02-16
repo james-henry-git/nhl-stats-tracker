@@ -1,11 +1,11 @@
 # NHL Stats Tracker
 
-A comprehensive Python application to download, store, and track NHL statistics over time using the official NHL public API and PostgreSQL database.
+A comprehensive Python application to download, store, and track NHL statistics over time using the official NHL public API and SQLite database.
 
 ## Features
 
 - **Automated Data Collection**: Fetch NHL teams, players, rosters, and statistics from the official NHL API
-- **PostgreSQL Database**: Store historical data with proper relational schema
+- **SQLite Database**: Lightweight local storage with proper relational schema - no server required
 - **Scheduled Updates**: Automatic daily updates of statistics
 - **Comprehensive Stats**: Track player stats, team stats, games, and more
 - **Time-Series Tracking**: Monitor statistics changes over multiple seasons
@@ -24,8 +24,9 @@ The system tracks:
 ## Prerequisites
 
 - Python 3.8 or higher
-- PostgreSQL 12 or higher
 - pip (Python package manager)
+
+That's it! SQLite is included with Python, so no separate database installation needed.
 
 ## Installation
 
@@ -54,42 +55,24 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Setup PostgreSQL Database
+### 4. Configure Environment Variables (Optional)
 
-Install PostgreSQL if you haven't already, then create the database:
-
-```bash
-# Connect to PostgreSQL
-psql -U postgres
-
-# Run the setup script
-\i setup_database.sql
-
-# Or manually create the database
-CREATE DATABASE nhl_stats;
-```
-
-### 5. Configure Environment Variables
-
-Copy the example environment file and update with your settings:
+The app works out of the box with default settings. If you want to customize:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` file with your database credentials:
+Edit `.env` file with your preferences:
 
 ```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=nhl_stats
-DB_USER=postgres
-DB_PASSWORD=your_password_here
+# Optional: specify database file location (defaults to nhl_stats.db)
+DB_PATH=nhl_stats.db
 UPDATE_INTERVAL_HOURS=24
 LOG_LEVEL=INFO
 ```
 
-### 6. Initialize Database Tables
+### 5. Initialize Database Tables
 
 ```bash
 python main.py init
@@ -242,10 +225,10 @@ All operations are logged to:
 
 ## Troubleshooting
 
-### Database Connection Issues
-- Verify PostgreSQL is running
-- Check database credentials in `.env`
-- Ensure database exists: `psql -U postgres -l`
+### Database Issues
+- The SQLite database file (`nhl_stats.db`) is created automatically on first run
+- If you get database errors, try deleting `nhl_stats.db` and running `python main.py init` again
+- The database file can be moved/backed up like any other file
 
 ### API Request Failures
 - Check internet connection
@@ -280,5 +263,5 @@ Feel free to submit issues, fork the repository, and create pull requests for an
 
 - NHL for providing the public API
 - SQLAlchemy for excellent ORM capabilities
-- PostgreSQL for robust data storage
+- SQLite for lightweight, reliable data storage
 ```

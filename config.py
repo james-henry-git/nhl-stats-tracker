@@ -7,18 +7,14 @@ load_dotenv()
 
 class Config:
     """Application configuration."""
-    
-    # Database settings
-    DB_HOST = os.getenv('DB_HOST', 'localhost')
-    DB_PORT = os.getenv('DB_PORT', '5432')
-    DB_NAME = os.getenv('DB_NAME', 'nhl_stats')
-    DB_USER = os.getenv('DB_USER', 'postgres')
-    DB_PASSWORD = os.getenv('DB_PASSWORD', '')
-    
+
+    # Database settings - SQLite
+    DB_PATH = os.getenv('DB_PATH', 'nhl_stats.db')
+
     @property
     def DATABASE_URL(self):
         """Construct database URL."""
-        return f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        return f"sqlite:///{self.DB_PATH}"
     
     # Application settings
     UPDATE_INTERVAL_HOURS = int(os.getenv('UPDATE_INTERVAL_HOURS', '24'))

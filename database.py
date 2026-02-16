@@ -24,10 +24,8 @@ class Database:
         try:
             self.engine = create_engine(
                 config.DATABASE_URL,
-                pool_pre_ping=True,
-                pool_size=10,
-                max_overflow=20,
-                echo=False
+                echo=False,
+                connect_args={'check_same_thread': False}  # For SQLite threading
             )
             
             self.session_factory = sessionmaker(bind=self.engine)
