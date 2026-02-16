@@ -177,12 +177,14 @@ The application uses the official NHL public API:
 - **Stats URL**: `https://api.nhle.com/stats/rest/en`
 
 Key endpoints:
-- `/teams` - All NHL teams
+- `/standings/now` - Current standings (also used to fetch team list)
 - `/roster/{team}/{season}` - Team roster
 - `/club-stats/{team}/{season}/2` - Team statistics
 - `/player/{id}/landing` - Player details and stats
 - `/standings/{season}` - League standings
 - `/schedule/{date}` - Game schedule
+
+**Note:** The NHL API changed in 2023. The legacy `/teams` endpoint no longer exists, so we extract team information from the standings endpoint instead.
 
 ## Database Queries
 
