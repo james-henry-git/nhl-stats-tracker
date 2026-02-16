@@ -47,24 +47,32 @@ class DataManager:
                 for team_data in teams_data:
                     # Check if team exists
                     team = session.query(Team).filter_by(nhl_id=team_data.get('id')).first()
-                    
+
+                    # Extract data with fallbacks for both legacy and new API formats
+                    team_name = team_data.get('name') or team_data.get('fullName', '')
+                    team_abbr = team_data.get('abbreviation') or team_data.get('triCode', '')
+
+                    # Handle venue data (legacy API format)
+                    venue = team_data.get('venue', {})
+                    team_city = venue.get('city', '') if venue else ''
+
                     if team:
                         # Update existing team
-                        team.name = team_data.get('fullName', team_data.get('name', ''))
-                        team.abbreviation = team_data.get('triCode', team_data.get('abbrev', ''))
-                        team.city = team_data.get('placeName', {}).get('default', '')
+                        team.name = team_name
+                        team.abbreviation = team_abbr
+                        team.city = team_city
                         team.updated_at = datetime.utcnow()
                     else:
                         # Create new team
                         team = Team(
                             nhl_id=team_data.get('id'),
-                            name=team_data.get('fullName', team_data.get('name', '')),
-                            abbreviation=team_data.get('triCode', team_data.get('abbrev', '')),
-                            city=team_data.get('placeName', {}).get('default', ''),
-                            active=True
+                            name=team_name,
+                            abbreviation=team_abbr,
+                            city=team_city,
+                            active=team_data.get('active', True)
                         )
                         session.add(team)
-                    
+
                     count += 1
                 
                 duration = (datetime.now() - start_time).total_seconds()
